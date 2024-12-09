@@ -1,7 +1,8 @@
+using Mirror;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
     [Header("Movement Settings")]
     public float moveSpeed = 6f; // Player movement speed
@@ -26,9 +27,10 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (!isLocalPlayer) return;
+
         // Perform a capsule cast to check if the player is grounded
         isGrounded = IsGrounded();
-        Debug.Log(isGrounded);
 
         // Get input from WASD/Arrow Keys
         float horizontal = Input.GetAxisRaw("Horizontal"); // A/D or Left/Right
@@ -46,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Apply movement in FixedUpdate
+        if (!isLocalPlayer) return;
         MovePlayer();
     }
 

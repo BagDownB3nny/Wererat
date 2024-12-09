@@ -7,7 +7,13 @@ public class PlayerCamera : MonoBehaviour
     private float yRotation = 0.0f;
     private Interactable lastInteractable;
 
-    [SerializeField] private Transform orientation;
+    public Transform orientation = null;
+
+    public void SetOrientation(Transform newOrientation)
+    {
+        Debug.Log("Setting orientation");
+        orientation = newOrientation;
+    }
 
     void Update()
     {

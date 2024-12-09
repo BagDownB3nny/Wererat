@@ -79,8 +79,8 @@ MonoBehaviour:
   headlessStartMode: 0
   editorAutoStart: 0
   sendRate: 60
-  offlineScene: Assets/Scenes/Menu.unity
-  onlineScene: Assets/Scenes/Lobby.unity
+  offlineScene: Assets/MyAssets/Scenes/Menu.unity
+  onlineScene: Assets/MyAssets/Scenes/Lobby.unity
   offlineSceneLoadDelay: 0
   transport: {fileID: 0}
   networkAddress: localhost
@@ -88,7 +88,7 @@ MonoBehaviour:
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 5680960356715757763, guid: b8b10a9d1ac104467afac986ff172a9e, type: 3}
+  playerPrefab: {fileID: 7698957622413833049, guid: b8b10a9d1ac104467afac986ff172a9e, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs:

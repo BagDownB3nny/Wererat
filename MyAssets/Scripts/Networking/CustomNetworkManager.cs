@@ -29,21 +29,21 @@ public class CustomNetworkManager : NetworkManager
         base.OnStopHost();
     }
 
-    // public override void OnServerSceneChanged(string sceneName)
-    // {
-    //     base.OnServerSceneChanged(sceneName);
+    public override void OnServerSceneChanged(string sceneName)
+    {
+        base.OnServerSceneChanged(sceneName);
 
-    //     if (sceneName == "Game")
-    //     {
-    //         OnGameSceneStarted();
-    //     }
-    // }
+        if (sceneName == "Game")
+        {
+            OnGameSceneStarted();
+        }
+    }
 
-    // private void OnGameSceneStarted()
-    // {
-    //     HouseSpawner.instance.InstantiateHouses();
-    //     PlayerManager.instance.AssignRoles();
-    // }
+    private void OnGameSceneStarted()
+    {
+        HouseSpawner.instance.InstantiateHouses();
+        PlayerManager.instance.AssignRoles();
+    }
 
     public override void ServerChangeScene(string newSceneName)
     {
@@ -51,11 +51,6 @@ public class CustomNetworkManager : NetworkManager
         base.ServerChangeScene(newSceneName);
     }
 
-    public override void OnServerSceneChanged(string sceneName)
-    {
-        Debug.Log("Server finished loading scene: " + sceneName);
-        base.OnServerSceneChanged(sceneName);
-    }
 
     public override void OnClientSceneChanged()
     {

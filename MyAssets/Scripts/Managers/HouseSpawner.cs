@@ -11,11 +11,8 @@ public class HouseSpawner : NetworkBehaviour
     {
         if (instance == null)
         {
+            Debug.Log("HouseSpawner instance set");
             instance = this;
-            if (isServer)
-            {
-                InstantiateHouses();
-            }
         }
         else
         {
