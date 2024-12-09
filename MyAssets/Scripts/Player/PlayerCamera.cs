@@ -48,4 +48,16 @@ public class PlayerCamera : MonoBehaviour
         }
         return null;
     }
+
+    public void EnterFPSMode()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    public void EnterCursorMode()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
 }

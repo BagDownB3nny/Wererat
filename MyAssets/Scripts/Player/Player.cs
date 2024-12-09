@@ -1,11 +1,15 @@
 using Mirror;
 using Mirror.Examples.Basic;
+using Steamworks;
+using TMPro;
 using UnityEngine;
 
 public class Player : NetworkBehaviour
 {
     [SyncVar(hook = nameof(OnRoleChanged))]
     public Roles role;
+    public string steamUsername;
+    [SerializeField] private TMP_Text playerUIPrefab;
 
     public override void OnStartLocalPlayer()
     {
@@ -14,6 +18,16 @@ public class Player : NetworkBehaviour
         Camera.main.transform.localPosition = new Vector3(0, 0, 0);
         PlayerManager.localPlayer = this;
         Debug.Log("Local player set");
+
+        if (SteamManager.Initialized)
+        {
+            steamUsername = SteamFriends.GetPersonaName();
+        }
+        else
+        {
+            steamUsername = "Player " + Random.Range(0, 1000);
+        }
+        playerUIPrefab.text = steamUsername;
         CmdAddNewPlayer(this);
     }
 

@@ -1,9 +1,11 @@
+using Mirror;
 using UnityEngine;
 
 [RequireComponent(typeof(Outline))]
-public class Interactable : MonoBehaviour
+public class Interactable : NetworkBehaviour
 {
 
+    [Client]
     public void Highlight()
     {
         Debug.Log("Highlighting " + gameObject.name);
@@ -16,7 +18,7 @@ public class Interactable : MonoBehaviour
         gameObject.GetComponent<Outline>().enabled = false;
     }
 
-    public void Interact()
+    virtual public void Interact()
     {
         Debug.Log("Interacting with " + gameObject.name);
     }
