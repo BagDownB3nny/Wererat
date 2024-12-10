@@ -55,6 +55,11 @@ public class PlayerManager : NetworkBehaviour
         AssignRoles();
     }
 
+    public List<Player> GetPlayerList()
+    {
+        return players;
+    }
+
     [Server]
     public void AssignRoles()
     {
@@ -65,10 +70,7 @@ public class PlayerManager : NetworkBehaviour
         // Assign roles to players
         for (int i = 0; i < players.Count; i++)
         {
-            Debug.Log(i);
-            Debug.Log(players[i]);
             players[i].SetRole(playerRoles[i]);
-            Debug.Log($"Player {players[i].netId} has role {players[i].role}");
         }
     }
 

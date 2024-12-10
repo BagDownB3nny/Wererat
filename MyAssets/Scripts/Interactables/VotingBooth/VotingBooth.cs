@@ -4,9 +4,11 @@ using Mirror;
 public class VotingBooth : Interactable
 {
 
+    [SerializeField] private GameObject votingSlipCanvas;
+
     [Client]
     public override void Interact()
     {
-        Debug.Log("Interacting with VotingBooth");
+        votingSlipCanvas.SetActive(true);
     }
 }

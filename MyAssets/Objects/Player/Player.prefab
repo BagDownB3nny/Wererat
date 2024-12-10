@@ -363,6 +363,7 @@ GameObject:
   - component: {fileID: -8037093965631794601}
   - component: {fileID: 2734142283250011535}
   - component: {fileID: 7077649239556148038}
+  - component: {fileID: 7926418389997638708}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -507,3 +508,18 @@ MonoBehaviour:
   role: 0
   steamUsername: 
   playerUIPrefab: {fileID: 4101089739321148874}
+--- !u!114 &7926418389997638708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7698957622413833049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd56a3588994244c492e7e84f6899421, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
