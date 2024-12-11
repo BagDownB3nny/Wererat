@@ -8,6 +8,8 @@ public class Player : NetworkBehaviour
 {
     [SyncVar(hook = nameof(OnRoleChanged))]
     public Roles role;
+
+    [SyncVar(hook = nameof(OnUsernameChanged))]
     public string steamUsername;
     [SerializeField] private TMP_Text playerUIPrefab;
 
@@ -22,13 +24,20 @@ public class Player : NetworkBehaviour
         if (SteamManager.Initialized)
         {
             steamUsername = SteamFriends.GetPersonaName();
+            CmdUpdateSteamUsername(steamUsername);
         }
         else
         {
             steamUsername = "Player " + Random.Range(0, 1000);
+            CmdUpdateSteamUsername(steamUsername);
         }
         playerUIPrefab.text = steamUsername;
-        CmdAddNewPlayer(this);
+    }
+
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+        PlayerManager.instance.AddPlayer(steamUsername, netId);
     }
 
     [Server]
@@ -38,13 +47,15 @@ public class Player : NetworkBehaviour
     }
 
     [Command]
-    public void CmdAddNewPlayer(Player player)
+    private void CmdUpdateSteamUsername(string newUsername)
     {
-        if (PlayerManager.instance == null)
-        {
-            return;
-        }
-        PlayerManager.instance.AddNewPlayer(player);
+        steamUsername = newUsername;
+    }
+
+    [Client]
+    private void OnUsernameChanged(string oldUsername, string newUsername)
+    {
+        playerUIPrefab.text = newUsername;
     }
 
     public void OnRoleChanged(Roles oldRole, Roles newRole)

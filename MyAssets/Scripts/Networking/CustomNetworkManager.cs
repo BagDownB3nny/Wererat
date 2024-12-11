@@ -1,3 +1,4 @@
+using System.Linq;
 using Mirror;
 using UnityEngine;
 
@@ -42,7 +43,6 @@ public class CustomNetworkManager : NetworkManager
     private void OnGameSceneStarted()
     {
         HouseSpawner.instance.InstantiateHouses();
-        PlayerManager.instance.AssignRoles();
     }
 
     public override void ServerChangeScene(string newSceneName)

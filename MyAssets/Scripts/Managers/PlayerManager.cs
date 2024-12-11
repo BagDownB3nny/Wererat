@@ -1,8 +1,11 @@
 using UnityEngine;
 using Mirror;
-using Mirror.Examples.Basic;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
+
+public class SyncListPlayer : SyncList<NetworkIdentity> { };
 
 public class PlayerManager : NetworkBehaviour
 {
@@ -14,11 +17,12 @@ public class PlayerManager : NetworkBehaviour
     // For example, in a 6 player game, there could be 1 werewolf, 1 seer, 1 medium, and 3 villagers
     public Roles[] playerRoles;
 
-    // A list of all the players in the current lobby
-    // Only server needs this list to assign roles
-    public List<Player> players = new List<Player>();
-
     public static Player localPlayer;
+
+    [SyncVar(hook = nameof(OnPlayerNetIdsChanged))]
+    public readonly SyncDictionary<string, uint> playerNetIds = new SyncDictionary<string, uint>();
+
+    public Dictionary<string, uint> playerNetIdsView = new Dictionary<string, uint>();
 
     public void Awake()
     {
@@ -30,8 +34,26 @@ public class PlayerManager : NetworkBehaviour
         else
         {
             Debug.LogWarning("More than one instance of PlayerManager found!");
+            Destroy(gameObject);
             return;
         }
+    }
+
+    [Server]
+    public void AddPlayer(string username, uint playerNetId)
+    {
+        playerNetIds[username] = playerNetId;
+        playerNetIdsView = playerNetIds.ToDictionary(x => x.Key, x => x.Value);
+        if (playerNetIds.Count == NetworkServer.connections.Count)
+        {
+            OnAllPlayersLoaded();
+        }
+    }
+
+    private void OnPlayerNetIdsChanged(SyncDictionary<string, uint>.Operation op, string key, uint value)
+    {
+        playerNetIdsView = playerNetIds.ToDictionary(x => x.Key, x => x.Value);
+        Debug.Log("Client updated");
     }
 
     public void HandleNetworkStop()
@@ -40,24 +62,15 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [Server]
-    public void AddNewPlayer(Player player)
-    {
-        players.Add(player);
-        if (NetworkServer.connections.Count == players.Count)
-        {
-            OnAllPlayersLoaded();
-        }
-    }
-
-    [Server]
     public void OnAllPlayersLoaded()
     {
         AssignRoles();
     }
 
-    public List<Player> GetPlayerList()
+    [Client]
+    public string GetLocalPlayerName()
     {
-        return players;
+        return localPlayer.steamUsername;
     }
 
     [Server]
@@ -67,10 +80,11 @@ public class PlayerManager : NetworkBehaviour
         // Shuffle the roles
         playerRoles = playerRoles.OrderBy(x => Random.value).ToArray();
 
-        // Assign roles to players
-        for (int i = 0; i < players.Count; i++)
+        int index = 0;
+        foreach (Player player in GetAllPlayers())
         {
-            players[i].SetRole(playerRoles[i]);
+            player.SetRole(playerRoles[index]);
+            index++;
         }
     }
 
@@ -80,7 +94,7 @@ public class PlayerManager : NetworkBehaviour
         // This is just a placeholder
         // In a real game, you would have a more complex algorithm to generate roles
         // For example, in a 6 player game, there could be 1 werewolf, 1 seer, 1 medium, and 3 villagers
-        Roles[] roles = new Roles[players.Count];
+        Roles[] roles = new Roles[playerNetIds.Count];
         for (int i = 0; i < roles.Length; i++)
         {
             if (i == 0)
@@ -101,5 +115,10 @@ public class PlayerManager : NetworkBehaviour
             }
         }
         return roles;
+    }
+
+    public List<Player> GetAllPlayers()
+    {
+        return playerNetIds.Select(x => NetworkServer.spawned[x.Value].GetComponent<Player>()).ToList();
     }
 }
